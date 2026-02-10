@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emerge-Fi | Web3 RWA Market Landscape v4.5</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@700;800;900&display=swap');
+:root{
+  --bg:#0a0b0f;--bg-card:#12131a;--bg-card-hover:#1a1b25;--border:#1e2030;
+  --text:#e8e9ed;--text-dim:#7a7d8e;--text-muted:#4a4d5e;
+  --blue:#4d7cfe;--cyan:#17e8cb;--purple:#a855f7;--orange:#ff8c42;--rose:#f43f5e;
+  --g1:linear-gradient(135deg,#4d7cfe 0%,#17e8cb 100%);
+  --g2:linear-gradient(135deg,#a855f7 0%,#4d7cfe 100%);
+  --g3:linear-gradient(135deg,#ff8c42 0%,#f43f5e 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Malgun Gothic','맑은고딕',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:13px;line-height:1.6;}
+.mono{font-family:'JetBrains Mono',monospace;}
+.container{max-width:1440px;margin:0 auto;padding:0 32px;}
+.header{padding:24px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,11,15,0.94);backdrop-filter:blur(20px);z-index:100;}
+.header-inner{display:flex;justify-content:space-between;align-items:center;}
+.logo{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:600;}
+.logo span{background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.header-meta{font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;}
+.hero{padding:48px 0 36px;}
+.hero h1{font-family:'Playfair Display',serif;font-size:44px;font-weight:900;line-height:1.15;max-width:780px;margin-bottom:14px;}
+.hero h1 .gr{background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:14px;color:var(--text-dim);max-width:620px;line-height:1.7;}
+.sec{margin-bottom:60px;}
+.sec-h{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.sec-n{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);background:rgba(23,232,203,.08);padding:3px 9px;border-radius:4px;}
+.sec-t{font-family:'Playfair Display',serif;font-size:24px;font-weight:800;}
+
+/* Reco */
+.reco-box{background:linear-gradient(135deg,rgba(77,124,254,.08) 0%,rgba(23,232,203,.05) 100%);border:1px solid rgba(77,124,254,.2);border-radius:14px;padding:36px;margin-bottom:60px;position:relative;overflow:hidden;}
+.reco-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--g1);}
+.reco-box h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;margin-bottom:18px;}
+.reco-cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.reco-pattern{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);background:rgba(23,232,203,.1);display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:10px;}
+.reco-left h3{font-size:18px;font-weight:700;margin-bottom:12px;}
+.reco-bullets{list-style:none;padding:0;margin:0;font-size:12px;color:var(--text-dim);line-height:1.7;}
+.reco-bullets li{margin-bottom:10px;padding-left:16px;position:relative;}
+.reco-bullets li::before{content:'›';position:absolute;left:0;color:var(--cyan);font-weight:700;}
+.reco-bullets li strong{color:var(--text);}
+.reco-bullets li .hl{color:var(--cyan);font-weight:600;}
+.reco-right{background:rgba(10,11,15,.5);border:1px solid var(--border);border-radius:10px;padding:22px;}
+.reco-right h4{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.reco-right h4 .tag{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(23,232,203,.1);color:var(--cyan);}
+.reco-right ul{list-style:none;padding:0;font-size:11px;color:var(--text-dim);line-height:1.6;}
+.reco-right ul li{margin-bottom:8px;padding-left:14px;position:relative;}
+.reco-right ul li::before{content:'•';position:absolute;left:0;color:var(--blue);}
+.reco-right ul li strong{color:var(--text);}
+
+/* Filter */
+.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.filter-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.4px;font-family:'JetBrains Mono',monospace;}
+.filter-select{background:var(--bg-card);border:1px solid var(--border);color:var(--text);padding:7px 32px 7px 14px;border-radius:7px;font-family:'Malgun Gothic',Arial,sans-serif;font-size:12px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%237a7d8e'%3E%3Cpath d='M5 7L0 2h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.filter-select:focus{outline:none;border-color:var(--blue);}
+.legend{display:flex;gap:4px;align-items:center;margin-left:auto;font-size:10px;color:var(--text-muted);}
+.legend-block{width:18px;height:12px;border-radius:2px;}
+
+/* Matrix */
+.matrix-wrapper{overflow-x:auto;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);}
+.matrix{width:100%;border-collapse:collapse;font-size:11px;min-width:900px;}
+.matrix th{padding:12px 10px;text-align:left;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);background:rgba(30,32,48,.8);border-bottom:1px solid var(--border);white-space:nowrap;}
+.matrix td{padding:10px 10px;border-bottom:1px solid rgba(30,32,48,.5);vertical-align:top;line-height:1.5;transition:background .3s;}
+.matrix .rc{font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:10px;white-space:nowrap;min-width:130px;}
+.ptag{display:inline-block;padding:2px 6px;border-radius:3px;margin:1px 2px;font-size:10px;font-weight:500;cursor:default;}
+.ptag-normal{background:rgba(255,255,255,.05);color:#888;}
+.ptag-multi{background:rgba(168,85,247,.12);color:var(--purple);border:1px solid rgba(168,85,247,.15);}
+.cell-tvl{display:block;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--cyan);margin-top:3px;opacity:.65;}
+.empty-cell{color:var(--text-muted);font-style:italic;font-size:10px;}
+.tvl-h0{background:transparent!important;}.tvl-h1{background:rgba(23,232,203,.04)!important;}.tvl-h2{background:rgba(23,232,203,.08)!important;}.tvl-h3{background:rgba(23,232,203,.14)!important;}.tvl-h4{background:rgba(23,232,203,.20)!important;}.tvl-h5{background:rgba(23,232,203,.28)!important;}
+
+/* Pattern Cards */
+.pat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.pat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;position:relative;overflow:hidden;transition:all .3s;}
+.pat-card:hover{border-color:rgba(77,124,254,.25);transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.3);}
+.pat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.pat-card:nth-child(1)::before{background:var(--g1);}
+.pat-card:nth-child(2)::before{background:var(--g2);}
+.pat-card:nth-child(3)::before{background:var(--g3);}
+.pat-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.pat-card h3{font-size:16px;font-weight:700;margin-bottom:5px;}
+.pat-card .sub{font-size:11px;color:var(--text-dim);margin-bottom:14px;line-height:1.5;}
+.pat-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:12px;}
+.pm-l{font-size:9px;color:var(--text-muted);margin-bottom:1px;}
+.pm-v{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;}
+.pp{display:inline-block;font-size:9px;padding:2px 8px;border-radius:4px;font-weight:500;font-family:'JetBrains Mono',monospace;margin:2px 3px 2px 0;}
+.pp-b{background:rgba(77,124,254,.1);color:var(--blue);}.pp-p{background:rgba(168,85,247,.1);color:var(--purple);}.pp-o{background:rgba(255,140,66,.1);color:var(--orange);}
+.vp-box{margin-top:12px;padding:10px 12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);}
+.vp-box h5{font-size:10px;text-transform:uppercase;color:var(--cyan);letter-spacing:.5px;margin-bottom:6px;font-family:'JetBrains Mono',monospace;}
+.vp-box p{font-size:11px;color:var(--text-dim);line-height:1.55;}
+
+/* TVL Bar Chart */
+.tvl-chart-box{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:28px;}
+.tvl-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.tvl-bar-name{width:140px;font-size:11px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tvl-bar-track{flex:1;height:24px;background:rgba(30,32,48,.6);border-radius:4px;overflow:hidden;}
+.tvl-bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;color:#fff;min-width:fit-content;transition:width .6s ease;}
+.tvl-bar-fill.pa{background:linear-gradient(90deg,var(--blue),rgba(77,124,254,.5));}
+.tvl-bar-fill.pb{background:linear-gradient(90deg,var(--purple),rgba(168,85,247,.5));}
+.tvl-bar-fill.pc{background:linear-gradient(90deg,var(--orange),rgba(255,140,66,.5));}
+.tvl-legend{display:flex;gap:16px;margin-top:14px;font-size:10px;color:var(--text-dim);}
+.tvl-legend span{display:flex;align-items:center;gap:5px;}
+.tvl-legend .dot{width:10px;height:10px;border-radius:3px;}
+
+/* Investor */
+.inv-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.inv-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:22px;}
+.inv-card h4{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.inv-card h4 .dot{width:7px;height:7px;border-radius:50%;}
+.bar-chart{display:flex;flex-direction:column;gap:10px;}
+.bar-row{display:flex;align-items:center;gap:8px;}
+.bar-label{width:100px;font-size:10px;color:var(--text-dim);flex-shrink:0;text-align:right;}
+.bar-track{flex:1;height:20px;background:rgba(30,32,48,.8);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 7px;font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;}
+.bf-blue{background:linear-gradient(90deg,var(--blue),rgba(77,124,254,.5));}
+.bf-cyan{background:linear-gradient(90deg,var(--cyan),rgba(23,232,203,.5));color:#0a0b0f;}
+.bf-purple{background:linear-gradient(90deg,var(--purple),rgba(168,85,247,.5));}
+.bf-orange{background:linear-gradient(90deg,var(--orange),rgba(255,140,66,.5));color:#0a0b0f;}
+
+/* Player */
+.player-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.player-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px;transition:all .3s;}
+.player-card:hover{border-color:rgba(77,124,254,.15);background:var(--bg-card-hover);}
+.player-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.player-name{font-size:15px;font-weight:700;}
+.player-type{font-size:8px;padding:3px 8px;border-radius:16px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.pt-t{background:rgba(23,232,203,.1);color:var(--cyan);}.pt-c{background:rgba(77,124,254,.1);color:var(--blue);}.pt-r{background:rgba(168,85,247,.1);color:var(--purple);}.pt-a{background:rgba(255,140,66,.1);color:var(--orange);}.pt-i{background:rgba(244,63,94,.1);color:var(--rose);}
+.player-desc{font-size:11px;color:var(--text-dim);line-height:1.55;margin-bottom:12px;}
+.player-metrics{display:flex;gap:16px;padding-top:10px;border-top:1px solid var(--border);}
+.player-metrics .pv{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;}
+.player-metrics .pl{font-size:9px;color:var(--text-dim);}
+.tab-bar{display:flex;gap:2px;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:3px;margin-bottom:16px;width:fit-content;}
+.tab-btn{padding:6px 14px;font-size:11px;font-weight:500;border:none;background:transparent;color:var(--text-dim);border-radius:5px;cursor:pointer;font-family:'Malgun Gothic',Arial,sans-serif;}
+.tab-btn:hover{color:var(--text);}.tab-btn.active{background:rgba(77,124,254,.12);color:var(--blue);}
+.footer{padding:30px 0;border-top:1px solid var(--border);text-align:center;font-size:10px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;}
+@media(max-width:1100px){.pat-grid,.player-grid,.reco-cols{grid-template-columns:1fr;}.inv-row{grid-template-columns:1fr;}.hero h1{font-size:28px;}.container{padding:0 14px;}}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="header"><div class="header-inner"><div class="logo"><span>Emerge-Fi</span> / Market Landscape</div><div class="header-meta">2026.02 — v4.5 · Web3 Only</div></div></header>
+
+<section class="hero">
+  <h1>2. Market & Asset Analysis <span class="gr">(The Two-Axis)</span></h1>
+  <p>블록체인 네이티브 플랫폼만 필터링. 자산유형·규제권역별 플레이어 배치, TVL, 성공 패턴을 분석합니다.</p>
+</section>
+
+<!-- Recommendation -->
+<div class="reco-box">
+  <h2>🎯 Emerge-Fi 전략 제언: Private Credit × Emerging Market</h2>
+  <div style="max-width:900px;">
+    <div class="reco-pattern">권장 → Pattern B: Full-Stack Private Credit Specialty</div>
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:14px;">신흥국 중소기업 대출에 특화된 수직 통합 플랫폼</h3>
+    <ul class="reco-bullets">
+      <li><strong>Play 영역:</strong> <span class="hl">Private Credit (MSME + Retail) × High-yield EM (동남아·남미)</span></li>
+      <li><strong>핵심 가치 제안:</strong> <span class="hl">1) Institutional-grade 리스크 트랜칭 구조, 2) EVM 기반 토큰화 인프라, 3) Liquidity Gateway 온오프램프 제공</span>으로 현재 전통 시장에서 기관급 보안 및 안정성이 중요한 Credit 시장의 진입장벽을 해소합니다.</li>
+      <li><strong>왜 Pattern B인가:</strong> 대부분의 Web 3.0 플랫폼은 특정 Asset Class에 집중하여 해당 자산에 맞는 기술 및 규제 요건을 강조합니다. Private Credit 시장은 Centrifuge가 EVM 멀티체인 인프라와 실물 자산운용사 Janus Henderson과 파트너십을 통해 '기관급 리스크 트랜칭 및 토큰화 인프라'를 제공한 것처럼, 토큰화→트랜칭→DeFi 분배 전 과정을 소유하는 수직 통합 모델 구현이 성공 방정식입니다.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 01: Matrix -->
+<section class="sec">
+  <div class="sec-h"><span class="sec-n">01</span><h2 class="sec-t">Asset Class × Jurisdiction Matrix</h2></div>
+  <div class="filter-bar">
+    <span class="filter-label">Heatmap:</span>
+    <select class="filter-select" id="heatFilter" onchange="applyHeat()">
+      <option value="tvl">TVL 규모</option>
+      <option value="overlap">중복 기업 패턴 (A/B/C 컬러)</option>
+      <option value="none">Heatmap OFF</option>
+    </select>
+    <div class="legend" id="legBox">
+      <span style="font-size:9px">Low</span>
+      <span class="legend-block" id="l1" style="background:rgba(23,232,203,.06)"></span>
+      <span class="legend-block" id="l2" style="background:rgba(23,232,203,.10)"></span>
+      <span class="legend-block" id="l3" style="background:rgba(23,232,203,.16)"></span>
+      <span class="legend-block" id="l4" style="background:rgba(23,232,203,.22)"></span>
+      <span class="legend-block" id="l5" style="background:rgba(23,232,203,.30)"></span>
+      <span style="font-size:9px">High</span>
+    </div>
+  </div>
+  <div id="overlapLegend" style="display:none;margin-bottom:12px;font-size:10px;color:var(--text-dim);">
+    <span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:rgba(77,124,254,.20);vertical-align:middle;margin-right:3px;"></span>Pattern A (T-bills) &nbsp;
+    <span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:rgba(168,85,247,.20);vertical-align:middle;margin-right:3px;"></span>Pattern B (Credit) &nbsp;
+    <span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:rgba(255,140,66,.20);vertical-align:middle;margin-right:3px;"></span>Pattern C (RE/수익권) &nbsp;
+    <span style="font-size:9px;color:var(--text-muted)">※ 중복 기업이 많을수록 진하게 표시</span>
+  </div>
+  <div class="matrix-wrapper">
+    <table class="matrix" id="mtx">
+      <thead><tr>
+        <th>Jurisdiction</th>
+        <th data-col="credit">Private Credit (MSME)</th>
+        <th data-col="credit">Private Credit (Retail)</th>
+        <th data-col="re">Real Estate STO</th>
+        <th data-col="alt">Operating Income Rights</th>
+        <th data-col="tbill">T-bills / Risk-free</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="rc">🌏 High-yield EM</td>
+          <td data-tvl="40" data-col="credit"><span class="ptag ptag-multi">Goldfinch</span><span class="ptag ptag-multi">Credix</span><span class="ptag ptag-normal">Helicap</span><span class="cell-tvl">~$40M</span></td>
+          <td data-tvl="5" data-col="credit"><span class="ptag ptag-multi">Creditcoin</span><span class="cell-tvl">~$5M</span></td>
+          <td data-tvl="15" data-col="re"><span class="ptag ptag-normal">Elevated Returns</span><span class="ptag ptag-normal">GORO</span><span class="ptag ptag-normal">Binaryx</span><span class="cell-tvl">~$15M</span></td>
+          <td data-tvl="55" data-col="alt"><span class="ptag ptag-multi">Credix</span><span class="ptag ptag-normal">AgriDex</span><span class="ptag ptag-multi">Huma Finance</span><span class="cell-tvl">~$55M</span></td>
+          <td data-tvl="0" data-col="tbill"><span class="empty-cell">— Player 없음</span></td>
+        </tr>
+        <tr>
+          <td class="rc">🇰🇷🇯🇵 Regulated DM</td>
+          <td data-tvl="10" data-col="credit"><span class="ptag ptag-multi">Ant Digital</span><span class="cell-tvl">N/A</span></td>
+          <td data-tvl="0" data-col="credit"><span class="empty-cell">— Web3 없음</span></td>
+          <td data-tvl="300" data-col="re"><span class="ptag ptag-normal">Kasa</span><span class="ptag ptag-normal">Lucento</span><span class="ptag ptag-normal">Ichigo ST</span><span class="ptag ptag-multi">Progmat</span><span class="ptag ptag-multi">Alterna</span><span class="cell-tvl">~$300M</span></td>
+          <td data-tvl="50" data-col="alt"><span class="ptag ptag-multi">MusicCow</span><span class="ptag ptag-normal">BeatSwap</span><span class="cell-tvl">~$50M</span></td>
+          <td data-tvl="5" data-col="tbill"><span class="ptag ptag-normal">JPYC</span><span class="ptag ptag-normal">Proj.Ensemble</span><span class="cell-tvl">Pilot</span></td>
+        </tr>
+        <tr>
+          <td class="rc">🇦🇪🇸🇬 Crypto Hub</td>
+          <td data-tvl="200" data-col="credit"><span class="ptag ptag-normal">Credible</span><span class="ptag ptag-multi">Maple Finance</span><span class="cell-tvl">~$200M</span></td>
+          <td data-tvl="700" data-col="credit"><span class="ptag ptag-multi">ADDX</span><span class="cell-tvl">~$700M</span></td>
+          <td data-tvl="100" data-col="re"><span class="ptag ptag-normal">Stake</span><span class="ptag ptag-normal">ViRWA</span><span class="ptag ptag-multi">InvestaX</span><span class="ptag ptag-normal">SmartCrowd</span><span class="cell-tvl">~$100M</span></td>
+          <td data-tvl="500" data-col="alt"><span class="ptag ptag-normal">InvoiceMate</span><span class="ptag ptag-normal">Injective</span><span class="ptag ptag-multi">Royal</span><span class="cell-tvl">~$500M</span></td>
+          <td data-tvl="200" data-col="tbill"><span class="ptag ptag-multi">OpenEden</span><span class="ptag ptag-multi">Matrixdock</span><span class="ptag ptag-multi">BlackRock BUIDL</span><span class="cell-tvl">~$200M</span></td>
+        </tr>
+        <tr>
+          <td class="rc">🏝️ Offshore</td>
+          <td data-tvl="100" data-col="credit"><span class="ptag ptag-multi">Maple Finance</span><span class="cell-tvl">~$100M</span></td>
+          <td data-tvl="5" data-col="credit"><span class="ptag ptag-multi">TrueFi</span><span class="cell-tvl">~$5M</span></td>
+          <td data-tvl="10" data-col="re"><span class="ptag ptag-normal">Estate Protocol</span><span class="cell-tvl">~$10M</span></td>
+          <td data-tvl="5" data-col="alt"><span class="ptag ptag-normal">Athlete IP SPV</span><span class="cell-tvl">~$5M</span></td>
+          <td data-tvl="900" data-col="tbill"><span class="ptag ptag-multi">Centrifuge/Anemoy</span><span class="ptag ptag-normal">Theo</span><span class="ptag ptag-normal">Hashnote USYC</span><span class="ptag ptag-multi">TrueFi tfBILL</span><span class="cell-tvl">~$900M</span></td>
+        </tr>
+        <tr>
+          <td class="rc">🇺🇸 US Compliant</td>
+          <td data-tvl="500" data-col="credit"><span class="ptag ptag-multi">Figure</span><span class="cell-tvl">~$500M</span></td>
+          <td data-tvl="400" data-col="credit"><span class="ptag ptag-multi">Figure</span><span class="cell-tvl">~$400M</span></td>
+          <td data-tvl="170" data-col="re"><span class="ptag ptag-multi">RealT</span><span class="cell-tvl">~$170M</span></td>
+          <td data-tvl="85" data-col="alt"><span class="ptag ptag-multi">Royal</span><span class="ptag ptag-normal">Pipe</span><span class="ptag ptag-normal">JKBX</span><span class="ptag ptag-multi">MusicCow</span><span class="cell-tvl">~$85M</span></td>
+          <td data-tvl="4200" data-col="tbill"><span class="ptag ptag-multi">BlackRock BUIDL</span><span class="ptag ptag-multi">Ondo Finance</span><span class="ptag ptag-multi">Franklin FOBXX</span><span class="cell-tvl">~$4.2B</span></td>
+        </tr>
+        <tr>
+          <td class="rc">🌐 Global Multi</td>
+          <td data-tvl="400" data-col="credit"><span class="ptag ptag-multi">Centrifuge</span><span class="cell-tvl">~$400M</span></td>
+          <td data-tvl="1" data-col="credit"><span class="ptag ptag-multi">Goldfinch</span><span class="cell-tvl">$0.5M ↓</span></td>
+          <td data-tvl="170" data-col="re"><span class="ptag ptag-multi">RealT</span><span class="cell-tvl">~$170M</span></td>
+          <td data-tvl="700" data-col="alt"><span class="ptag ptag-multi">Maple/Syrup.fi</span><span class="ptag ptag-multi">Royal</span><span class="cell-tvl">~$700M</span></td>
+          <td data-tvl="5500" data-col="tbill"><span class="ptag ptag-multi">BlackRock BUIDL</span><span class="ptag ptag-multi">Ondo</span><span class="ptag ptag-normal">MakerDAO/Sky</span><span class="ptag ptag-multi">TrueFi tfBILL</span><span class="cell-tvl">~$5.5B</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 02: Patterns -->
+<section class="sec">
+  <div class="sec-h"><span class="sec-n">02</span><h2 class="sec-t">성공 플랫폼의 3가지 패턴</h2></div>
+  <div class="pat-grid">
+    <div class="pat-card">
+      <div class="pat-label">Pattern A — Global Risk-free Supplier</div>
+      <h3>글로벌 무위험 자산 공급자</h3>
+      <div class="sub">미국 국채를 토큰화해 전 세계 기관·DeFi에 24/7 담보 자산으로 공급. 수익보다 '온체인 달러 인프라'를 장악하는 것이 목적.</div>
+      <div class="pat-meta">
+        <div><div class="pm-l">주력 Asset</div><div class="pm-v" style="color:var(--cyan)">T-bills / MMF</div></div>
+        <div><div class="pm-l">확장 Asset</div><div class="pm-v" style="color:var(--blue)">토큰 주식·ETF</div></div>
+        <div><div class="pm-l">주력 Jurisdiction</div><div class="pm-v" style="color:var(--cyan)">US Compliant</div></div>
+        <div><div class="pm-l">확장 Jurisdiction</div><div class="pm-v" style="color:var(--blue)">Global Multi</div></div>
+      </div>
+      <div style="margin-bottom:10px;"><span class="pp pp-b">Ondo ($2.5B)</span><span class="pp pp-b">BUIDL ($1.7B)</span><span class="pp pp-b">FOBXX ($790M)</span></div>
+      <div class="vp-box"><h5>핵심 가치</h5><p><strong style="color:var(--text)">① 24/7 즉시 환매</strong> — 기존 국채 T+2 정산을 실시간으로. USDC로 언제든 교환 가능.<br><strong style="color:var(--text)">② DeFi 담보 표준</strong> — Binance·Deribit 등에서 온체인 담보로 수용. 유휴 스테이블코인이 이자를 받으면서 동시에 담보로 활용됨.<br><strong style="color:var(--text)">③ 멀티체인 접근성</strong> — 8개+ 체인에 배포. MetaMask 통합으로 누구나 국채 수익률에 접근.</p></div>
+    </div>
+    <div class="pat-card">
+      <div class="pat-label">Pattern B — Full-Stack Private Credit Specialty</div>
+      <h3>수직 통합 크레딧 인프라 플랫폼</h3>
+      <div class="sub">토큰화 OS + 기관 파트너십 + DeFi 유통 레일까지 전 과정을 소유. 자산운용사가 직접 온체인 펀드를 발행하는 인프라를 제공해 시장을 독점.</div>
+      <div class="pat-meta">
+        <div><div class="pm-l">주력 Asset</div><div class="pm-v" style="color:var(--purple)">Private Credit · CLO</div></div>
+        <div><div class="pm-l">확장 Asset</div><div class="pm-v" style="color:var(--purple)">Treasury · S&P 500</div></div>
+        <div><div class="pm-l">주력 Jurisdiction</div><div class="pm-v" style="color:var(--purple)">Global Multi</div></div>
+        <div><div class="pm-l">확장 Jurisdiction</div><div class="pm-v" style="color:var(--purple)">US · EU · EM</div></div>
+      </div>
+      <div style="margin-bottom:10px;"><span class="pp pp-p">Centrifuge ($1.37B)</span><span class="pp pp-p">Ant Digital ($8.4B)</span></div>
+      <div class="vp-box"><h5>핵심 가치</h5><p><strong style="color:var(--text)">① 토큰화 운영체제(OS)</strong> — 자산운용사가 직접 온체인 펀드를 발행할 수 있는 모듈형 인프라 제공. Whitelabel로 누구나 토큰화 상품 출시 가능.<br><strong style="color:var(--text)">② 기관급 신뢰 구조</strong> — S&P/Moody's AAA 등급 CLO(JAAA), 21회 독립 감사, Janus Henderson($373B AUM) 직접 파트너. DeFi와 TradFi의 브릿지 역할.<br><strong style="color:var(--text)">③ 멀티체인 DeFi 유통</strong> — deRWA로 ETH·Base·Arbitrum·Avalanche·Solana·BNB 6개 체인에서 자산 자유 이동. Sky(MakerDAO)가 $1B 배분, Falcon Finance 담보 수용.</p></div>
+    </div>
+    <div class="pat-card">
+      <div class="pat-label">Pattern C — Licensed Security Supplier</div>
+      <h3>규제 라이선스 기반 증권 공급자</h3>
+      <div class="sub">특정 국가의 금융 라이선스를 먼저 확보해 글로벌 대형 플랫폼이 들어올 수 없는 시장을 선점. 라이선스 자체가 진입장벽.</div>
+      <div class="pat-meta">
+        <div><div class="pm-l">주력 Asset</div><div class="pm-v" style="color:var(--orange)">STO · IP 수익권</div></div>
+        <div><div class="pm-l">확장 Asset</div><div class="pm-v" style="color:var(--orange)">RE STO</div></div>
+        <div><div class="pm-l">주력 Jurisdiction</div><div class="pm-v" style="color:var(--orange)">Reg DM (KR/JP)</div></div>
+        <div><div class="pm-l">확장 Jurisdiction</div><div class="pm-v" style="color:var(--orange)">US Compliant</div></div>
+      </div>
+      <div style="margin-bottom:10px;"><span class="pp pp-o">Alterna</span><span class="pp pp-o">MusicCow</span><span class="pp pp-o">Royal ($71M)</span></div>
+      <div class="vp-box"><h5>핵심 가치</h5><p><strong style="color:var(--text)">① 규제가 곧 해자(Moat)</strong> — 일본 FSA 인가, 한국 혁신금융 지정, 미국 SEC Reg A+ 등록은 수개월~수년 소요. 먼저 확보하면 경쟁사 진입 자체를 차단.<br><strong style="color:var(--text)">② 규제 수출 모델</strong> — 한 국가에서 검증된 상품 구조를 다른 국가 라이선스로 복제. MusicCow가 한국→미국으로 음악 IP를 수출한 패턴.<br><strong style="color:var(--text)">③ 로컬 자산 독점</strong> — 부동산·음악·미술품 등 현지 비유동자산을 토큰화. 글로벌 플랫폼이 접근하기 어려운 로컬 자산 파이프라인 확보.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03: TVL Bar Chart -->
+<section class="sec">
+  <div class="sec-h"><span class="sec-n">03</span><h2 class="sec-t">주요 플랫폼 TVL 비교 (2025-2026 기준)</h2></div>
+  <div class="tvl-chart-box" id="tvlChart"></div>
+  <script>
+  (function(){
+    const data=[
+      {name:'Ondo Finance',tvl:2500,pattern:'a'},
+      {name:'BlackRock BUIDL',tvl:1700,pattern:'a'},
+      {name:'Centrifuge',tvl:1370,pattern:'b'},
+      {name:'Maple Finance',tvl:1370,pattern:'b'},
+      {name:'Franklin FOBXX',tvl:790,pattern:'a'},
+      {name:'ADDX',tvl:700,pattern:'c'},
+      {name:'Alterna',tvl:300,pattern:'c'},
+      {name:'RealT',tvl:170,pattern:'c'},
+      {name:'OpenEden',tvl:100,pattern:'a'},
+      {name:'Royal',tvl:85,pattern:'c'},
+      {name:'Credix',tvl:50,pattern:'b'},
+      {name:'MusicCow',tvl:50,pattern:'c'},
+      {name:'Huma Finance',tvl:30,pattern:'b'},
+      {name:'Goldfinch',tvl:0.5,pattern:'b'},
+    ];
+    const mx=data[0].tvl;
+    const box=document.getElementById('tvlChart');
+    let html='';
+    data.forEach(d=>{
+      const pct=Math.max((d.tvl/mx)*100,1.5);
+      const cls=d.pattern==='a'?'pa':d.pattern==='b'?'pb':'pc';
+      const label=d.tvl>=1000?'$'+(d.tvl/1000).toFixed(1)+'B':d.tvl>=1?'$'+d.tvl+'M':'$'+d.tvl+'M';
+      html+=`<div class="tvl-bar-row"><div class="tvl-bar-name">${d.name}</div><div class="tvl-bar-track"><div class="tvl-bar-fill ${cls}" style="width:${pct}%">${label}</div></div></div>`;
+    });
+    html+=`<div class="tvl-legend">
+      <span><span class="dot" style="background:var(--blue)"></span>Pattern A (Risk-free Supplier)</span>
+      <span><span class="dot" style="background:var(--purple)"></span>Pattern B (Credit Specialty)</span>
+      <span><span class="dot" style="background:var(--orange)"></span>Pattern C (Licensed Security)</span>
+    </div>`;
+    box.innerHTML=html;
+  })();
+  </script>
+</section>
+
+<!-- 04: Investors -->
+<section class="sec">
+  <div class="sec-h"><span class="sec-n">04</span><h2 class="sec-t">투자자 구성 — 누가 어디에 투자하나</h2></div>
+  <div class="inv-row">
+    <div class="inv-card">
+      <h4><span class="dot" style="background:var(--blue)"></span>Pattern A (Ondo 기준)</h4>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">OUSG 기관</span><div class="bar-track"><div class="bar-fill bf-blue" style="width:75%">~$770M</div></div></div>
+        <div class="bar-row"><span class="bar-label">USDY 글로벌</span><div class="bar-track"><div class="bar-fill bf-cyan" style="width:55%">~$690M</div></div></div>
+        <div class="bar-row"><span class="bar-label">Global Mkts</span><div class="bar-track"><div class="bar-fill bf-purple" style="width:48%">~$600M</div></div></div>
+      </div>
+    </div>
+    <div class="inv-card">
+      <h4><span class="dot" style="background:var(--purple)"></span>Pattern B (Centrifuge)</h4>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">DeFi 프로토콜</span><div class="bar-track"><div class="bar-fill bf-purple" style="width:72%">~70% (Sky $1B+)</div></div></div>
+        <div class="bar-row"><span class="bar-label">기관 운용사</span><div class="bar-track"><div class="bar-fill bf-blue" style="width:25%">~25% (JH·Apollo)</div></div></div>
+        <div class="bar-row"><span class="bar-label">리테일 DeFi</span><div class="bar-track"><div class="bar-fill bf-orange" style="width:5%">~5%</div></div></div>
+      </div>
+    </div>
+    <div class="inv-card">
+      <h4><span class="dot" style="background:var(--orange)"></span>Pattern C (Royal)</h4>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">Crypto Whale</span><div class="bar-track"><div class="bar-fill bf-blue" style="width:43%">40-45%</div></div></div>
+        <div class="bar-row"><span class="bar-label">Super Fans</span><div class="bar-track"><div class="bar-fill bf-cyan" style="width:53%">50-55%</div></div></div>
+        <div class="bar-row"><span class="bar-label">Inst/DAO</span><div class="bar-track"><div class="bar-fill bf-purple" style="width:5%">&lt;5%</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05: Key Player Analysis — Centrifuge -->
+<section class="sec">
+  <div class="sec-h"><span class="sec-n">05</span><h2 class="sec-t">Key Player Analysis — Centrifuge</h2></div>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+
+    <!-- Header Banner -->
+    <div style="padding:28px 32px;background:linear-gradient(135deg,rgba(168,85,247,.10) 0%,rgba(77,124,254,.06) 100%);border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <span style="font-size:24px;font-weight:800;font-family:'Playfair Display',serif;">Centrifuge</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(168,85,247,.12);color:var(--purple);">PATTERN B</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(77,124,254,.12);color:var(--blue);">TOKEN: CFG</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-dim);max-width:600px;line-height:1.6;">2017년 설립. RWA 토큰화 인프라의 원조. 자산운용사가 온체인 펀드를 직접 발행·관리·유통할 수 있는 모듈형 플랫폼 제공. Janus Henderson($373B AUM), Sky(MakerDAO), Apollo와 파트너.</p>
+        </div>
+        <div style="display:flex;gap:14px;">
+          <div style="text-align:center;padding:10px 16px;background:rgba(10,11,15,.4);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--purple);">$1.37B</div>
+            <div style="font-size:9px;color:var(--text-dim);">TVL (2025 Q4)</div>
+          </div>
+          <div style="text-align:center;padding:10px 16px;background:rgba(10,11,15,.4);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--cyan);">8 체인</div>
+            <div style="font-size:9px;color:var(--text-dim);">멀티체인 배포</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body Grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+
+      <!-- Left: Size & Growth + Brand -->
+      <div style="padding:24px 28px;border-right:1px solid var(--border);">
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;"><span style="color:var(--purple);">📊</span> Size & Growth</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">JAAA (AAA CLO)</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">$1B+</div>
+            <div style="font-size:9px;color:var(--cyan);">온체인 #1 기관 대안펀드</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">JTRSY (국채 펀드)</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">$400M</div>
+            <div style="font-size:9px;color:var(--cyan);">Top 5 토큰화 국채 AUM</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">TVL 성장 (2025)</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">+94%</div>
+            <div style="font-size:9px;color:var(--cyan);">2주 만에 $1B 돌파 (Aug 2025)</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">SPXA (S&P 500 인덱스)</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">Launch</div>
+            <div style="font-size:9px;color:var(--cyan);">최초 라이선스 온체인 S&P 500</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">ABS 신용등급</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">AAA</div>
+            <div style="font-size:9px;color:var(--cyan);">S&P + Moody's (JAAA CLO)</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">독립 감사</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">21회</div>
+            <div style="font-size:9px;color:var(--text-dim);">2025년에만 15회 (전수 공개)</div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="color:var(--purple);">🎯</span> Brand Position</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:0;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(168,85,247,.15);color:var(--purple);white-space:nowrap;">FOCUS TYPE</span>
+            <span style="font-size:11px;color:var(--text-dim);"><strong style="color:var(--text);">Specialty (토큰화 OS)</strong> — 직접 대출하지 않고, 자산운용사가 온체인 펀드를 발행·관리·유통하는 인프라를 제공. "RWA의 AWS".</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(23,232,203,.12);color:var(--cyan);white-space:nowrap;">POSITIONING</span>
+            <span style="font-size:11px;color:var(--text-dim);"><strong style="color:var(--text);">Institutional-grade Transparency</strong> — Janus Henderson($373B), Apollo, S&P DJI 직접 파트너. DAO 거버넌스 + 21회 감사로 투명성 극대화.</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(255,140,66,.12);color:var(--orange);white-space:nowrap;">MOAT</span>
+            <span style="font-size:11px;color:var(--text-dim);"><strong style="color:var(--text);">First-mover + 기관 Lock-in</strong> — 2017년 설립 RWA 원조. ERC-7540 표준 주도. Sky $1B, Grove $250M 등 대형 DeFi 프로토콜이 인프라에 의존.</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(77,124,254,.12);color:var(--blue);white-space:nowrap;">ECOSYSTEM</span>
+            <span style="font-size:11px;color:var(--text-dim);"><strong style="color:var(--text);">Tokenized Asset Coalition 공동 창립</strong>, RWA Summit 주최, Republic Digital 전략적 투자 유치.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: User Base + Visual Persona -->
+      <div style="padding:24px 28px;">
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;"><span style="color:var(--cyan);">👥</span> User Base & Accessibility</h4>
+
+        <div style="margin-bottom:16px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">Primary Audience</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(77,124,254,.08);border:1px solid rgba(77,124,254,.15);border-radius:6px;font-size:10px;">
+              <span style="font-size:14px;">🏛️</span><strong style="color:var(--blue);">DeFi 프로토콜 (Primary)</strong>
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.15);border-radius:6px;font-size:10px;">
+              <span style="font-size:14px;">📊</span><strong style="color:var(--purple);">기관 자산운용사</strong>
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(23,232,203,.08);border:1px solid rgba(23,232,203,.15);border-radius:6px;font-size:10px;">
+              <span style="font-size:14px;">🔧</span><strong style="color:var(--cyan);">핀테크 빌더</strong>
+            </span>
+          </div>
+
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">공급측 (Asset Managers)</div>
+          <div style="font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;padding:10px 12px;background:rgba(255,255,255,.02);border-radius:6px;border:1px solid rgba(255,255,255,.04);">
+            Whitelabel 플랫폼으로 자산운용사가 자체 토큰화 펀드 출시 가능. Self-service(개발자 직접) 또는 Managed(Anemoy 위탁) 2가지 티어 제공. Daylight(에너지), Caesar(크립토 주식) 등이 첫 고객. RWA Bento 프로그램으로 초기 팀에 $600K 지원.
+          </div>
+
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">수요측 (Investors) Entry Barrier</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text-dim);">
+              <span style="color:var(--purple);flex-shrink:0;">•</span>
+              <span><strong style="color:var(--text);">JAAA (AAA CLO)</strong> — KYC 필수. 기관·적격 투자자 중심. Sky(MakerDAO)·Grove가 주요 배분자. ~4.71% APY.</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text-dim);">
+              <span style="color:var(--purple);flex-shrink:0;">•</span>
+              <span><strong style="color:var(--text);">JTRSY (국채 펀드)</strong> — Spark(Sky) Tokenization Grand Prix 우승. Moody's·S&P 등급. ~3.65% APY. 멀티체인 접근.</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text-dim);">
+              <span style="color:var(--purple);flex-shrink:0;">•</span>
+              <span><strong style="color:var(--text);">deRWA (DeFi 래핑)</strong> — deJTRSY·deJAAA로 자유 전송 가능한 DeFi 토큰 형태. Falcon Finance 담보 수용. 6개 체인 유통.</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text-dim);">
+              <span style="color:var(--purple);flex-shrink:0;">•</span>
+              <span><strong style="color:var(--text);">ACRDX (Apollo 크레딧)</strong> — $50M 초기 배분. Apollo Diversified Credit Fund 온체인 접근. 글로벌 크레딧 다각화.</span>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="color:var(--orange);">🧬</span> Visual Persona</h4>
+        <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(168,85,247,.06) 0%,rgba(77,124,254,.04) 100%);border-radius:10px;border:1px solid rgba(168,85,247,.12);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:var(--text-dim);line-height:1.5;">
+            <div><strong style="color:var(--text);font-size:10px;">Identity:</strong><br>"RWA의 AWS" — 직접 자산을 운용하지 않고, 자산운용사·DeFi 프로토콜이 토큰화 상품을 만드는 인프라를 제공하는 플랫폼.</div>
+            <div><strong style="color:var(--text);font-size:10px;">Tone:</strong><br>기술 중심. 감사 보고서·표준(ERC-7540)·DAO 거버넌스를 강조. 마케팅보다 프로토콜 투명성으로 신뢰 구축.</div>
+            <div><strong style="color:var(--text);font-size:10px;">Tech Stack:</strong><br>Centrifuge V3 (EVM 네이티브), ERC-7540, Wormhole 크로스체인, Chainlink 오라클, BVI 규제 펀드 구조.</div>
+            <div><strong style="color:var(--text);font-size:10px;">확장 방향:</strong><br>CLO·국채→S&P 500→섹터 인덱스→에너지·사모 크레딧. 2026년 $15M 프로토콜 수익 목표. RWA TVL $100B 전망.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 05-B: Key Player Analysis — Maple Finance -->
+<section class="sec" style="margin-top:-30px;">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+
+    <!-- Header Banner -->
+    <div style="padding:28px 32px;background:linear-gradient(135deg,rgba(77,124,254,.10) 0%,rgba(23,232,203,.06) 100%);border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <span style="font-size:24px;font-weight:800;font-family:'Playfair Display',serif;">Maple Finance</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(168,85,247,.12);color:var(--purple);">PATTERN B</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(23,232,203,.12);color:var(--cyan);">TOKEN: SYRUP</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-dim);max-width:600px;line-height:1.6;">DeFi 최대 기관 대출 프로토콜. 무담보 대출 위기(2022) 이후 과담보·기관 전용 모델로 피벗 성공. Goldman Sachs 출신 팀이 전통 금융 수준의 신용 심사를 온체인에 구현.</p>
+        </div>
+        <div style="display:flex;gap:14px;">
+          <div style="text-align:center;padding:10px 16px;background:rgba(10,11,15,.4);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--purple);">$4B+</div>
+            <div style="font-size:9px;color:var(--text-dim);">총 예치금 (Dec 2025)</div>
+          </div>
+          <div style="text-align:center;padding:10px 16px;background:rgba(10,11,15,.4);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--cyan);">99%</div>
+            <div style="font-size:9px;color:var(--text-dim);">대출 상환율</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body Grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+
+      <!-- Left: Size & Growth + Brand -->
+      <div style="padding:24px 28px;border-right:1px solid var(--border);">
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;"><span style="color:var(--blue);">📊</span> Size & Growth</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">총 예치금 (Deposits)</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">$4B+</div>
+            <div style="font-size:9px;color:var(--cyan);">YTD +701% (2025)</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">syrupUSDC AUM</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">$2.66B</div>
+            <div style="font-size:9px;color:var(--cyan);">총 예치금의 63%</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">누적 대출 실행</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">$12B+</div>
+            <div style="font-size:9px;color:var(--cyan);">상환율 99%</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">연 매출 성장</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">+533%</div>
+            <div style="font-size:9px;color:var(--cyan);">Q4 2025 ARR ~$6.6M → 2026 목표 $100M</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">SYRUP 토큰 성과</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">+162%</div>
+            <div style="font-size:9px;color:var(--cyan);">YTD (BTC -2% 대비)</div>
+          </div>
+          <div style="padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid rgba(255,255,255,.04);">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">담보 비율</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;">>150%</div>
+            <div style="font-size:9px;color:var(--text-dim);">과담보 모델 (BTC·ETH 담보)</div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="color:var(--blue);">🎯</span> Brand Position</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(168,85,247,.15);color:var(--purple);white-space:nowrap;">FOCUS TYPE</span>
+            <span style="font-size:11px;color:var(--text-dim);"><strong style="color:var(--text);">High-yield 기관 대출</strong> — 트레이딩 펌·마켓 메이커에 과담보 OTC 대출 제공. syrupUSDC 평균 APY ~8%, 벤치마크 대비 최고 수익률.</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(23,232,203,.12);color:var(--cyan);white-space:nowrap;">POSITIONING</span>
+            <span style="font-size:11px;color:var(--text-dim);"><strong style="color:var(--text);">Institutional-grade Credit Manager</strong> — "전문가가 관리하는 풀" 모델. Delegate(신용 전문가)가 차주를 심사. 순수 알고리즘 대출 대비 99% 상환율 달성.</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(255,140,66,.12);color:var(--orange);white-space:nowrap;">MOAT</span>
+            <span style="font-size:11px;color:var(--text-dim);"><strong style="color:var(--text);">DeFi 통합 깊이 + 수익률 우위</strong> — Aave·Pendle·Drift·Kamino·Fluid에 담보 수용. Binance·Bitwise 파트너. 67% 활성 대출 성장 점유율.</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(77,124,254,.12);color:var(--blue);white-space:nowrap;">BUYBACK</span>
+            <span style="font-size:11px;color:var(--text-dim);"><strong style="color:var(--text);">수익의 25% → SYRUP 바이백</strong> (MIP-019). 프로토콜 성장이 직접 토큰 가치에 반영되는 구조.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: User Base + Visual Persona -->
+      <div style="padding:24px 28px;">
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;"><span style="color:var(--cyan);">👥</span> User Base & Accessibility</h4>
+
+        <div style="margin-bottom:16px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">Primary Audience</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(77,124,254,.08);border:1px solid rgba(77,124,254,.15);border-radius:6px;font-size:10px;">
+              <span style="font-size:14px;">🏛️</span><strong style="color:var(--blue);">기관 차주 (Primary)</strong>
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.15);border-radius:6px;font-size:10px;">
+              <span style="font-size:14px;">💰</span><strong style="color:var(--purple);">DeFi Yield Farmer</strong>
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(23,232,203,.08);border:1px solid rgba(23,232,203,.15);border-radius:6px;font-size:10px;">
+              <span style="font-size:14px;">🏦</span><strong style="color:var(--cyan);">TradFi 진입 기관</strong>
+            </span>
+          </div>
+
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">수요측 (Borrowers)</div>
+          <div style="font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;padding:10px 12px;background:rgba(255,255,255,.02);border-radius:6px;border:1px solid rgba(255,255,255,.04);">
+            Permissioned 풀 — 기관 트레이딩 펌·마켓 메이커 대상. BTC·ETH 등 유동 자산 과담보(>150% LTV). 전문 Delegate가 신용 심사. 2022년 무담보 위기 이후 완전 과담보로 전환.
+          </div>
+
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">공급측 (Lenders) Entry Barrier</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text-dim);">
+              <span style="color:var(--blue);flex-shrink:0;">•</span>
+              <span><strong style="color:var(--text);">syrupUSDC (Permissionless)</strong> — USDC 예치, ~8% APY. 누구나 접근 가능. $2.66B AUM. Pendle PT 루핑, Aave 담보 활용 가능.</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text-dim);">
+              <span style="color:var(--blue);flex-shrink:0;">•</span>
+              <span><strong style="color:var(--text);">syrupUSDT</strong> — USDT 예치. 총 예치금의 27% 차지. Solana 확장으로 크로스체인 접근.</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text-dim);">
+              <span style="color:var(--blue);flex-shrink:0;">•</span>
+              <span><strong style="color:var(--text);">Maple Institutional (Permissioned)</strong> — 대형 자본 배분자 전용. KYC/AML 필수. BTC 수익률·구조화 크레딧 등 맞춤형 상품.</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text-dim);">
+              <span style="color:var(--blue);flex-shrink:0;">•</span>
+              <span><strong style="color:var(--text);">Chainlink CCIP 크로스체인</strong> — Ethereum·Solana·Arbitrum·Base. syrupUSDC 크로스체인 전송 가능.</span>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="color:var(--orange);">🧬</span> Visual Persona</h4>
+        <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(77,124,254,.06) 0%,rgba(23,232,203,.04) 100%);border-radius:10px;border:1px solid rgba(77,124,254,.12);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:var(--text-dim);line-height:1.5;">
+            <div><strong style="color:var(--text);font-size:10px;">Identity:</strong><br>"DeFi의 Goldman Sachs" — 전통 금융 신용 심사를 온체인에 이식. Institutional credit manager 포지셔닝.</div>
+            <div><strong style="color:var(--text);font-size:10px;">Tone:</strong><br>데이터 중심, 수익률 비교 테이블로 증명. "가장 일관되고, 예측 가능하고, 신뢰할 수 있는 수익률"을 브랜드 약속으로.</div>
+            <div><strong style="color:var(--text);font-size:10px;">Risk:</strong><br>2022년 무담보 대출 디폴트 경험. 케이맨 법적 분쟁(syrupBTC 관련 $107M TVL 영향). 규제 리스크 상존.</div>
+            <div><strong style="color:var(--text);font-size:10px;">확장 방향:</strong><br>2026: AUM→매출 중심 전환. Multi-asset 대출(RWA 포함). Builder Codes로 핀테크 통합. $2B Syrup TVL 목표.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 06: Players (Top 10 by TVL) -->
+<section class="sec">
+  <div class="sec-h"><span class="sec-n">06</span><h2 class="sec-t">Top 10 Web3 Players (TVL 기준)</h2></div>
+  <div class="matrix-wrapper">
+    <table class="matrix" style="min-width:700px;">
+      <thead>
+        <tr>
+          <th style="width:30px;">#</th>
+          <th style="width:160px;">플랫폼</th>
+          <th style="width:80px;">유형</th>
+          <th style="width:90px;">TVL / AUM</th>
+          <th style="width:80px;">패턴</th>
+          <th>핵심 포인트</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono" style="color:var(--text-muted)">1</td><td><strong>Ondo Finance</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(23,232,203,.10);color:var(--cyan);">T-BILL</span></td><td class="mono" style="color:var(--cyan)">$2.5B</td><td style="color:var(--blue);font-size:10px;">A</td><td style="font-size:11px;color:var(--text-dim);">OUSG 국채 → USDY 글로벌 → 200종+ 온체인 주식/ETF. Ondo Chain L1. 8+ 체인 배포.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">2</td><td><strong>BlackRock BUIDL</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(23,232,203,.10);color:var(--cyan);">T-BILL</span></td><td class="mono" style="color:var(--cyan)">$1.7B</td><td style="color:var(--blue);font-size:10px;">A</td><td style="font-size:11px;color:var(--text-dim);">세계 최대 자산운용사 온체인 MMF. Binance·Deribit 담보 수용. 7+ 체인.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">3</td><td><strong>Centrifuge</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(168,85,247,.10);color:var(--purple);">INFRA</span></td><td class="mono" style="color:var(--purple)">$1.37B</td><td style="color:var(--purple);font-size:10px;">B</td><td style="font-size:11px;color:var(--text-dim);">RWA 토큰화 OS. JAAA CLO $1B+. JTRSY $400M. S&P 500 인덱스. V3 EVM 8체인.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">4</td><td><strong>Maple Finance</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(168,85,247,.10);color:var(--purple);">CREDIT</span></td><td class="mono" style="color:var(--purple)">$1.37B</td><td style="color:var(--purple);font-size:10px;">B</td><td style="font-size:11px;color:var(--text-dim);">기관 과담보 대출. syrupUSDC $2.66B. 상환율 99%. Aave·Pendle 통합.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">5</td><td><strong>Franklin FOBXX</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(23,232,203,.10);color:var(--cyan);">T-BILL</span></td><td class="mono" style="color:var(--cyan)">$790M</td><td style="color:var(--blue);font-size:10px;">A</td><td style="font-size:11px;color:var(--text-dim);">최초 SEC 등록 토큰화 MMF. BENJI 토큰. Stellar·Polygon·Arbitrum·Avalanche.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">6</td><td><strong>ADDX</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(255,140,66,.10);color:var(--orange);">STO</span></td><td class="mono" style="color:var(--orange)">$700M</td><td style="color:var(--orange);font-size:10px;">C</td><td style="font-size:11px;color:var(--text-dim);">싱가포르 MAS 인가. PE·헤지펀드·채권 토큰화. 기관 증권형 플랫폼.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">7</td><td><strong>Ant Digital</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(168,85,247,.10);color:var(--purple);">INFRA</span></td><td class="mono" style="color:var(--purple)">$8.4B*</td><td style="color:var(--purple);font-size:10px;">B</td><td style="font-size:11px;color:var(--text-dim);">알리바바 공급망 + IoT Oracle. 에너지 RWA 토큰화. 8,700만 SME. *에너지 RWA 기준.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">8</td><td><strong>Alterna</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(255,140,66,.10);color:var(--orange);">STO</span></td><td class="mono" style="color:var(--orange)">$300M</td><td style="color:var(--orange);font-size:10px;">C</td><td style="font-size:11px;color:var(--text-dim);">미쓰이물산 자회사. 일본 FSA 인가. 부동산·항공기·선박 STO.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">9</td><td><strong>RealT</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(255,140,66,.10);color:var(--orange);">RE STO</span></td><td class="mono" style="color:var(--orange)">$170M+</td><td style="color:var(--orange);font-size:10px;">C</td><td style="font-size:11px;color:var(--text-dim);">$50 진입, 일배당. 970+ 미국 부동산 토큰화. Gnosis 체인. Reg D/S.</td></tr>
+        <tr><td class="mono" style="color:var(--text-muted)">10</td><td><strong>OpenEden</strong></td><td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(23,232,203,.10);color:var(--cyan);">T-BILL</span></td><td class="mono" style="color:var(--cyan)">$100M+</td><td style="color:var(--blue);font-size:10px;">A</td><td style="font-size:11px;color:var(--text-dim);">싱가포르 기반 T-bill. Moody's A 등급. XRPL·EVM. Asia-EU 최대 토크나이저.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Emerge-Fi Market Landscape v4.5 (Web3 Only) — Feb 2026</p>
+  <p style="margin-top:5px;">Sources: DefiLlama, RWA.xyz, Messari, SEC, MAS, FSA, IFC, Company filings</p>
+</footer>
+</div>
+
+<script>
+const platforms={};
+document.querySelectorAll('#mtx tbody td:not(.rc)').forEach(td=>{
+  const col=td.dataset.col;
+  td.querySelectorAll('.ptag').forEach(t=>{
+    const n=t.textContent.trim();
+    if(!platforms[n])platforms[n]=[];
+    platforms[n].push({col,td});
+  });
+});
+function clearH(){document.querySelectorAll('#mtx tbody td:not(.rc)').forEach(td=>{for(let i=0;i<=5;i++)td.classList.remove('tvl-h'+i);td.style.background='';});}
+function applyHeat(){
+  clearH();
+  const m=document.getElementById('heatFilter').value;
+  const leg=document.getElementById('legBox');
+  const oL=document.getElementById('overlapLegend');
+  if(m==='none'){leg.style.display='none';oL.style.display='none';return;}
+  if(m==='tvl'){
+    leg.style.display='flex';oL.style.display='none';
+    ['rgba(23,232,203,.06)','rgba(23,232,203,.10)','rgba(23,232,203,.16)','rgba(23,232,203,.22)','rgba(23,232,203,.30)'].forEach((c,i)=>{document.getElementById('l'+(i+1)).style.background=c;});
+    const cells=document.querySelectorAll('#mtx tbody td:not(.rc)');
+    let mx=0;cells.forEach(td=>{const v=parseFloat(td.dataset.tvl)||0;if(v>mx)mx=v;});
+    cells.forEach(td=>{const v=parseFloat(td.dataset.tvl)||0;const r=mx>0?v/mx:0;let lv=0;if(r>.5)lv=5;else if(r>.25)lv=4;else if(r>.1)lv=3;else if(r>.03)lv=2;else if(r>.003)lv=1;td.classList.add('tvl-h'+lv);});
+  }
+  if(m==='overlap'){
+    leg.style.display='none';oL.style.display='block';
+    document.querySelectorAll('#mtx tbody td:not(.rc)').forEach(td=>{
+      const col=td.dataset.col;
+      let multiCount=0;
+      td.querySelectorAll('.ptag-multi').forEach(t=>{
+        const n=t.textContent.trim();
+        if(platforms[n]&&platforms[n].length>1) multiCount++;
+      });
+      if(multiCount===0) return;
+      // Color by which pattern this column belongs to
+      let baseColor;
+      if(col==='tbill') baseColor='77,124,254'; // blue = Pattern A
+      else if(col==='credit') baseColor='168,85,247'; // purple = Pattern B
+      else baseColor='255,140,66'; // orange = Pattern C (re, alt)
+      // Intensity by overlap count
+      const intensity=Math.min(multiCount,4);
+      const alpha=0.06+(intensity*0.06);
+      td.style.background=`rgba(${baseColor},${alpha})`;
+    });
+  }
+}
+applyHeat();
+</script>
+</body>
+</html>
